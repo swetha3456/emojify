@@ -22,25 +22,27 @@ for label_id, label in enumerate(labels):
     for img_filename in os.listdir(label_train_path):
         img_path = os.path.join(label_train_path, img_filename)
         img = cv2.imread(img_path)  
-        X_train.append(img.flatten())  
+        gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        X_train.append(gray_image.flatten())  
         y_train.append(label_id)
         
     for img_filename in os.listdir(label_test_path):
         img_path = os.path.join(label_test_path, img_filename)
         img = cv2.imread(img_path)
-        X_test.append(img.flatten())
+        gray_image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        X_test.append(gray_image.flatten())
         y_test.append(label_id)
 
 print("Processed images")
 
-X_train = np.array(X_train)
-X_test = np.array(X_test)
+X_train = np.array(X_train, dtype=object)
+X_test = np.array(X_test, dtype=object)
 y_train = np.array(y_train)
 y_test = np.array(y_test)
 
 print("Finished prepping data, beginning classification")
-classifier = RandomForestClassifier()
 
+classifier = RandomForestClassifier(max_depth=30, min_samples_leaf=2, n_estimators=200)
 classifier.fit(X_train, y_train)
 y_pred = classifier.predict(X_test)
 accuracy = accuracy_score(y_test, y_pred)
