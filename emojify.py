@@ -1,4 +1,5 @@
 import cv2
+from classify_emojis import classify
 
 # Capturing webcam feed
 cap = cv2.VideoCapture("video.mp4")
