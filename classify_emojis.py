@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import numpy as np
 import joblib
 
 model = joblib.load("/mnt/f/emojify/model.pkl")
@@ -22,8 +23,8 @@ GestureRecognizer = mp.tasks.vision.GestureRecognizer
 GestureRecognizerOptions = mp.tasks.vision.GestureRecognizerOptions
 VisionRunningMode = mp.tasks.vision.RunningMode
 options = GestureRecognizerOptions(
-    base_options=BaseOptions(model_asset_path='/path/to/model.task'),
-    running_mode=VisionRunningMode.VIDEO)
+    base_options=BaseOptions(model_asset_path='gesture_recognizer.task'),
+    running_mode=VisionRunningMode.IMAGE)
 
 def num_closed_eyes(face_landmarks):
     left_eye = face_landmarks.landmark[mp_face.FACE_CONNECTIONS[2][0]]
@@ -38,14 +39,11 @@ def classify(frame):
     if hand_results.multi_hand_landmarks:
         return classify_hand(frame, hand_results)
     elif face_results.multi_face_landmarks:
-        return classify_face(frame, face_results, face_detection_results)
+        return classify_face(frame, face_detection_results)
     else:
         return None
     
-def classify_face(frame, face_results, face_detection_results):
-    #if num_closed_eyes(face_results.multi_face_landmarks[0]) == 1:
-    #   return "wink"
-
+def classify_face(frame, face_detection_results):
     bboxC = face_detection_results.detections[0].location_data.relative_bounding_box
     ih, iw, _ = frame.shape
     bbox = x, y, w, h = int(bboxC.xmin * iw), int(bboxC.ymin * ih), int(bboxC.width * iw), int(bboxC.height * ih)
@@ -59,17 +57,19 @@ def classify_face(frame, face_results, face_detection_results):
     return model.predict([flattened_face])[0]
 
 def classify_hand(frame, face_results):
-    img = mp.Image(data=frame)
+    img_data = np.array(frame, dtype=np.uint8)
+    img = mp.Image(image_format=mp.ImageFormat.SRGB, data=img_data)
 
     with GestureRecognizer.create_from_options(options) as recognizer:
         recognition_result = recognizer.recognize(img)
-        top_gesture = recognition_result.gestures[0][0]
+        
+        # Check if gestures were recognized
+        if recognition_result.gestures:
+            top_gesture = recognition_result.gestures[0][0].category_name
+            
+            if top_gesture != "Unknown":
+                return top_gesture
 
-    if top_gesture != 0:
-        return top_gesture + 7
-    
-    if face_results.multi_face_landmarks:
-        return classify_face(face_results)
-    
     return None
+
 
