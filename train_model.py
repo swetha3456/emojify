@@ -6,8 +6,8 @@ import joblib
 from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 
-train_path = "F:/emojify/images/train"
-test_path = "F:/emojify/images/validation"
+train_path = "images/train"
+test_path = "images/validation"
 labels = ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
 
 X_train = []
