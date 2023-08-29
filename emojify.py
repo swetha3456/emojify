@@ -14,18 +14,18 @@ while cap.isOpened():
     emoji_index = classify(frame_rgb)
 
     if emoji_index is not None:
-        emoji_img = cv2.imread(f"output/emoji_{emoji_index}.jpg")
-        emoji_position = (10, 10)
-        emoji_height, emoji_width = 300, 300
-        emoji_resized = cv2.resize(emoji_img, (emoji_width, emoji_height))
+            emoji_img = cv2.imread(f"output/emoji_{emoji_index}.jpg")
+            emoji_position = (10, 10)
+            emoji_height, emoji_width = 300, 300
+            emoji_resized = cv2.resize(emoji_img, (emoji_width, emoji_height))
 
-        combined_frame = frame.copy()
-        combined_frame[emoji_position[1]:emoji_position[1] + emoji_height, emoji_position[0]:emoji_position[0] + emoji_width] = emoji_resized
-        cv2.imshow('Emojify', combined_frame)
+            combined_frame = frame.copy()
+            combined_frame[emoji_position[1]:emoji_position[1] + emoji_height, emoji_position[0]:emoji_position[0] + emoji_width] = emoji_resized
+            cv2.imshow('Emojify', combined_frame)
 
     else:
         cv2.imshow('Emojify', frame)
-
+        
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
