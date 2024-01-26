@@ -45,11 +45,6 @@ I used the trained model to process live video feed and capture emojis from it i
 ### Dataset Used 
 https://www.kaggle.com/datasets/msambare/fer2013
 
-
-Built the demo program which captures live videostream and predicts in real time
-Compared various classification algorithms to find the most accurate - Random Forest Classifier
-Expanding dataset to include other emojis
-
 ## Challenges
 - Data imbalance (had to duplicate/flip images to resolve this)
 - Issues displaying the image on the video (since OpenCV doesn't directly support emoji fonts, I had to overlay the emoji as an image onto the frame)
