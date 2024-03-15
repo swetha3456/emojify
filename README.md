@@ -40,18 +40,13 @@ I noticed that there was a data imbalance in the given data. I tried to fix this
 I also performed some other preprocessing steps such as converting the images to greyscale and resizing them. After comparing various classifiers offered by scikit-learn, I went with the random forest classifier due to its high accuracy and lowest error in the classification report.
 
 ### Training and Testing
-I used the training and validation images to identify hyperparameters, which again improved the accuracy to around 50%, after which I loaded the trained model into a .pkl file.
+I used the training and validation images to identify the model that performed best (Random Forest Classifier) and to identify hyperparameters, which again improved the accuracy to around 50%, after which I loaded the trained model into a .pkl file.
 
 ### Building the Demo Program
 I used the trained model to process live video feed and capture emojis from it in real time. I used Mediapipe's inbuilt functionality for classifying hand gestures to classify gesture-related emojis.
 
 ### Dataset Used 
 https://www.kaggle.com/datasets/msambare/fer2013
-
-
-Built the demo program which captures live videostream and predicts in real time
-Compared various classification algorithms to find the most accurate - Random Forest Classifier
-Expanding dataset to include other emojis
 
 ## Challenges
 - Data imbalance (had to duplicate/flip images to resolve this)
