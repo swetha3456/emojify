@@ -1,8 +1,5 @@
 # emojify
 
-## Demo Video
-
-
 ## Project Overview
 This project aims to use ML models to convert facial expressions into emojis.
 
