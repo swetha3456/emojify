@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 
 train_path = "images/train"
-test_path = "images/validation"
+test_path = "images/test"
 labels = ["angry", "disgust", "fear", "happy", "neutral", "sad", "surprise"]
 
 X_train = []

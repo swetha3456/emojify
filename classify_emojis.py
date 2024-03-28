@@ -1,9 +1,7 @@
 import cv2
 import mediapipe as mp
 import numpy as np
-import joblib
-
-model = joblib.load("/mnt/f/emojify/model.pkl")
+from processing import predict
 
 # Initializing Mediapipe face detection
 mp_face_detection = mp.solutions.face_detection
@@ -31,7 +29,7 @@ def num_closed_eyes(face_landmarks):
     right_eye = face_landmarks.landmark[mp_face.FACE_CONNECTIONS[1][0]]
     return int(left_eye.y > 0.5) + int(right_eye.y > 0.5)
 
-def classify(frame):
+def classify(frame, model):
     hand_results = hands.process(frame)
     face_detection_results = detect.process(frame)
     face_results = face_mesh.process(frame)
@@ -39,22 +37,18 @@ def classify(frame):
     if hand_results.multi_hand_landmarks:
         return classify_hand(frame, hand_results)
     elif face_results.multi_face_landmarks:
-        return classify_face(frame, face_detection_results)
+        return classify_face(frame, face_detection_results, model)
     else:
         return None
     
-def classify_face(frame, face_detection_results):
+def classify_face(frame, face_detection_results, model):
     bboxC = face_detection_results.detections[0].location_data.relative_bounding_box
     ih, iw, _ = frame.shape
     bbox = x, y, w, h = int(bboxC.xmin * iw), int(bboxC.ymin * ih), int(bboxC.width * iw), int(bboxC.height * ih)
-    cv2.rectangle(frame, bbox, (0, 255, 0), 2)
         
-    # Cropping out the face and preprocessing to use the model
-    face_region = frame[y:y+h, x:x+w]
-    resized_face = cv2.resize(face_region, (48, 48))
-    grayscale_face = cv2.cvtColor(resized_face, cv2.COLOR_RGB2GRAY)
-    flattened_face = grayscale_face.flatten()
-    return model.predict([flattened_face])[0]
+    # Cropping the face
+    face_region = frame[y-40:y+h, x:x+w]
+    return predict(face_region, model)
 
 def classify_hand(frame, face_results):
     img_data = np.array(frame, dtype=np.uint8)
